@@ -9,15 +9,15 @@ public class BarcodeHelper {
         barcodeData.setSource(source);
 
         if (source.startsWith("002") && source.length() >= 10) { // Prefix 2 - Weighted Items
-            barcodeData.setType(2);
+            barcodeData.setType("Weighted Item");
             String plu = source.substring(3, 8);
             barcodeData.setUPC("002" + plu + "00000");//Formats PLU codes as the desired UPC format.
             
         } else if (source.length() >= 13 && Character.isDigit(source.charAt(0))) { //Normal UPC
-            barcodeData.setType(1);
+            barcodeData.setType("UPC");
             barcodeData.setUPC(source.length() > 13 ? source.substring(source.length() - 13) : String.format("%013d", Long.parseLong(source)));
         } else if (source.startsWith("S") && source.length() >= 24) { //Sign bar code
-            barcodeData.setType(3);
+            barcodeData.setType("Sign");
             barcodeData.setUPC(source.substring(source.length() - 13));//Uses only the last 13 digits of the sign bar code
         } else {
             throw new IllegalArgumentException("Invalid barcode format.");//If given code is neither null nor empty, but is still invalid, it's thrown out
@@ -30,7 +30,7 @@ public class BarcodeHelper {
 class BarcodeData { // Structure of the BarcodeData parse method
     private String source; // Initial string input received from the scanner
     private String upc; // The bar code format types used in the parse method
-    private int type; // The bar code type: (UPC, PLU, or sign)
+    private String type; // The bar code type: (UPC, PLU, or sign)
 
     public String getSource() {
         return source;//Getter method for string source
@@ -48,11 +48,11 @@ class BarcodeData { // Structure of the BarcodeData parse method
         this.upc = upc;//Setter method for string upc
     }
 
-    public int getType() {
+    public String getType() {
         return type;//Getter method for int type
     }
 
-    public void setType(int type) {
+    public void setType(String type) {
         this.type = type;//Setter method for int type
     }
 }
